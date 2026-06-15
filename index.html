@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confidential Multi-Cloud Data Architecture | Executive Proposal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2744;
+    --navy-mid: #1a3a5c;
+    --blue: #1e5fa8;
+    --blue-light: #2e7fd4;
+    --gold: #b8943f;
+    --gold-light: #d4ac55;
+    --cream: #f8f5f0;
+    --warm-white: #fdfcfa;
+    --text: #1c2b3a;
+    --text-mid: #3d5168;
+    --text-light: #6b7f94;
+    --rule: #d4c9b8;
+    --red-accent: #8b1a1a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--warm-white);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(15, 39, 68, 0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(184, 148, 63, 0.3);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold-light); }
+
+  .nav-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(184,148,63,0.4);
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 50%, #0d2035 100%);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 80% 20%, rgba(30,95,168,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 400px at 10% 80%, rgba(184,148,63,0.08) 0%, transparent 60%);
+  }
+
+  .hero-grid-lines {
+    position: absolute; inset: 0; overflow: hidden; opacity: 0.04;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-inner {
+    position: relative; z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .eyebrow-line {
+    width: 40px; height: 1px;
+    background: var(--gold);
+  }
+
+  .eyebrow-text {
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold-light);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 5vw, 64px);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-sub {
+    font-size: 18px; font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    max-width: 620px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+  }
+
+  .hero-meta {
+    display: flex; gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+
+  .meta-label {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .meta-value {
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 48px;
+    display: flex; align-items: center; gap: 12px;
+    color: rgba(255,255,255,0.3);
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 32px; height: 1px;
+    background: rgba(255,255,255,0.2);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { width: 32px; opacity: 0.3; }
+    50% { width: 48px; opacity: 0.6; }
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 96px 48px; }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-header {
+    display: flex; align-items: flex-start; gap: 24px;
+    margin-bottom: 56px;
+  }
+
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px; font-weight: 700;
+    line-height: 1;
+    color: var(--rule);
+    flex-shrink: 0;
+    margin-top: -8px;
+  }
+
+  .section-header-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 600;
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .section-header-text p {
+    font-size: 16px; color: var(--text-mid);
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+  }
+
+  /* ── SUMMARY ── */
+  #summary { background: var(--cream); }
+
+  .summary-body {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    align-items: start;
+  }
+
+  .summary-text {
+    font-size: 17px; line-height: 1.8;
+    color: var(--text-mid);
+  }
+
+  .summary-text p + p { margin-top: 20px; }
+
+  .callout-box {
+    background: var(--navy);
+    padding: 36px;
+    border-left: 4px solid var(--gold);
+    position: relative;
+  }
+
+  .callout-box::before {
+    content: '\201C';
+    position: absolute; top: 16px; left: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; color: rgba(184,148,63,0.2);
+    line-height: 1;
+  }
+
+  .callout-box p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px; font-style: italic;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+    position: relative; z-index: 1;
+  }
+
+  .callout-box .callout-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    font-style: normal;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+
+  /* ── RISKS ── */
+  #risks { background: var(--warm-white); }
+
+  .risks-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    background: var(--rule);
+  }
+
+  .risk-card {
+    background: var(--warm-white);
+    padding: 40px 36px;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .risk-card:hover { background: var(--cream); }
+
+  .risk-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 700;
+    color: var(--rule);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .risk-type {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red-accent);
+    margin-bottom: 8px;
+  }
+
+  .risk-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .risk-card ul {
+    list-style: none; padding: 0;
+  }
+
+  .risk-card ul li {
+    font-size: 14px; color: var(--text-mid);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--rule);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .risk-card ul li::before {
+    content: '—';
+    position: absolute; left: 0;
+    color: var(--gold);
+    font-size: 12px;
+  }
+
+  .risk-card ul li:last-child { border-bottom: none; }
+
+  /* ── ARCHITECTURE ── */
+  #architecture { background: var(--navy); }
+
+  #architecture .section-number { color: rgba(255,255,255,0.08); }
+  #architecture .section-header-text h2 { color: #ffffff; }
+  #architecture .section-header-text p { color: rgba(255,255,255,0.5); }
+
+  .arch-intro {
+    font-size: 17px; color: rgba(255,255,255,0.6);
+    max-width: 640px;
+    margin-bottom: 56px;
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    line-height: 1.8;
+  }
+
+  .rings-container {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 48px;
+  }
+
+  .ring-card {
+    background: rgba(255,255,255,0.03);
+    padding: 40px;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.3s, border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ring-card:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(184,148,63,0.3);
+  }
+
+  .ring-card::before {
+    content: attr(data-ring);
+    position: absolute; top: 20px; right: 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 80px; font-weight: 700;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+  }
+
+  .ring-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .ring-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 16px;
+  }
+
+  .ring-card p {
+    font-size: 14px; color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+  }
+
+  .ring-divider {
+    width: 32px; height: 2px;
+    background: var(--gold);
+    margin: 16px 0;
+  }
+
+  .atlan-note {
+    background: rgba(184,148,63,0.08);
+    border: 1px solid rgba(184,148,63,0.2);
+    padding: 32px 40px;
+    display: flex; gap: 24px; align-items: flex-start;
+  }
+
+  .atlan-icon {
+    width: 48px; height: 48px; flex-shrink: 0;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--navy);
+  }
+
+  .atlan-note h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+
+  .atlan-note p {
+    font-size: 14px; color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+  }
+
+  /* ── ROADMAP ── */
+  #roadmap { background: var(--cream); }
+
+  .phases-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--rule);
+  }
+
+  .phase-card {
+    padding: 36px 28px;
+    border-right: 1px solid var(--rule);
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .phase-card:last-child { border-right: none; }
+  .phase-card:hover { background: rgba(30,95,168,0.04); }
+
+  .phase-number {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+
+  .phase-timeline {
+    font-size: 12px; color: var(--text-light);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .phase-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .phase-goal {
+    font-size: 13px; color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .phase-deliverable {
+    font-size: 12px;
+    padding: 12px 14px;
+    background: var(--navy);
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+    border-left: 3px solid var(--gold);
+  }
+
+  .phase-deliverable strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+
+  /* ── INVESTMENT ── */
+  #investment { background: var(--warm-white); }
+
+  .investment-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    background: var(--rule);
+    margin-bottom: 48px;
+  }
+
+  .invest-panel {
+    padding: 48px 40px;
+  }
+
+  .invest-panel.risk-panel { background: #fdf5f5; }
+  .invest-panel.return-panel { background: #f5f8fd; }
+
+  .invest-panel h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .invest-panel .panel-sub {
+    font-size: 13px; color: var(--text-light);
+    margin-bottom: 28px;
+    font-style: italic;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .invest-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex; gap: 16px;
+  }
+
+  .invest-item:last-child { border-bottom: none; }
+
+  .invest-bullet {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 8px;
+  }
+
+  .invest-text {
+    font-size: 14px; color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .invest-text strong { color: var(--navy); font-weight: 600; }
+
+  .bottom-line {
+    background: var(--navy);
+    padding: 40px 48px;
+    display: grid; grid-template-columns: auto 1fr; gap: 32px;
+    align-items: center;
+    border-left: 6px solid var(--gold);
+  }
+
+  .bottom-line-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+  }
+
+  .bottom-line-text {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px; font-style: italic;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+  }
+
+  /* ── THE ASK ── */
+  #ask { background: var(--cream); }
+
+  .ask-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px;
+    align-items: start;
+  }
+
+  .ask-items {
+    display: flex; flex-direction: column; gap: 0;
+    border: 1px solid var(--rule);
+  }
+
+  .ask-item {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--rule);
+    display: flex; gap: 20px; align-items: flex-start;
+    transition: background 0.2s;
+  }
+
+  .ask-item:last-child { border-bottom: none; }
+  .ask-item:hover { background: rgba(30,95,168,0.04); }
+
+  .ask-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--gold-light);
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .ask-item-text h4 {
+    font-size: 15px; font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .ask-item-text p {
+    font-size: 13px; color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .critical-box {
+    background: var(--navy);
+    padding: 40px;
+    border-top: 4px solid var(--red-accent);
+  }
+
+  .critical-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: #e07070;
+    margin-bottom: 16px;
+  }
+
+  .critical-box p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 16px; font-style: italic;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.75;
+  }
+
+  /* ── NEXT STEPS ── */
+  #nextsteps { background: var(--navy); }
+
+  #nextsteps .section-number { color: rgba(255,255,255,0.05); }
+  #nextsteps .section-header-text h2 { color: #ffffff; }
+  #nextsteps .section-header-text p { color: rgba(255,255,255,0.45); }
+
+  .steps-list {
+    display: flex; flex-direction: column; gap: 0;
+    counter-reset: step;
+  }
+
+  .step-item {
+    display: grid; grid-template-columns: 80px 1fr;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 28px 0;
+    align-items: center;
+    transition: background 0.2s;
+  }
+
+  .step-item:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700;
+    color: rgba(255,255,255,0.08);
+    line-height: 1;
+  }
+
+  .step-content h4 {
+    font-size: 16px; font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 4px;
+  }
+
+  .step-content p {
+    font-size: 14px; color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080f17;
+    padding: 40px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(184,148,63,0.2);
+  }
+
+  .footer-left {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; color: rgba(255,255,255,0.3);
+  }
+
+  .footer-right {
+    font-size: 12px; color: rgba(255,255,255,0.2);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    section { padding: 72px 24px; }
+    .hero { padding: 100px 24px 64px; }
+    .summary-body { grid-template-columns: 1fr; gap: 40px; }
+    .risks-grid { grid-template-columns: 1fr; }
+    .rings-container { grid-template-columns: 1fr; }
+    .phases-grid { grid-template-columns: 1fr 1fr; }
+    .investment-grid { grid-template-columns: 1fr; }
+    .ask-grid { grid-template-columns: 1fr; }
+    .bottom-line { grid-template-columns: 1fr; }
+    .bottom-line-label { writing-mode: horizontal-tb; transform: none; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Multi-Cloud Architecture</div>
+  <ul class="nav-links">
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#risks">Risks</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#investment">Investment</a></li>
+    <li><a href="#ask">The Ask</a></li>
+  </ul>
+  <div class="nav-badge">Confidential</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-lines"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Architecture Proposal</span>
+    </div>
+    <h1>Confidential<br><em>Multi-Cloud</em><br>Data Architecture</h1>
+    <p class="hero-sub">Unified observability, governance, and DPDP compliance across distributed cloud environments — built on your existing Atlan investment.</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Prepared For</span>
+        <span class="meta-value">CTO / CIO</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Classification</span>
+        <span class="meta-value">Confidential</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Date</span>
+        <span class="meta-value">May 2026</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Environment</span>
+        <span class="meta-value">AWS · GCP · On-Premises</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section id="summary">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div class="section-number">01</div>
+      <div class="section-header-text">
+        <h2>Executive Summary</h2>
+        <p>The strategic case in brief</p>
+      </div>
+    </div>
+    <div class="summary-body fade-in">
+      <div class="summary-text">
+        <p>Our current multi-cloud environment operates without unified observability, consistent data classification, or a centralised governance layer. Every integration point, every pipeline handoff, every cross-cloud transfer represents potential exposure — regulatory, security, and operational.</p>
+        <p>This proposal outlines a four-phase architecture built on our existing Atlan investment. It does not require a big-bang migration. Each phase delivers standalone, measurable value — and Phase 1 alone closes our most urgent compliance gap within 90 days.</p>
+        <p>The architecture addresses three compounding risks simultaneously: DPDP and GDPR regulatory exposure, unprotected cross-cloud data movement, and the absence of lineage-aware alerting that makes root-cause investigation manual and slow.</p>
+      </div>
+      <div class="callout-box">
+        <p class="callout-label">Key Question</p>
+        <p>Can we today produce a complete audit trail of where a specific user's data exists across all our cloud systems? If the answer is no — that is our opening compliance gap, and it is provable today.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RISKS -->
+<section id="risks">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div class="section-number">02</div>
+      <div class="section-header-text">
+        <h2>Three Live Risks</h2>
+        <p>The exposure we carry today, unaddressed</p>
+      </div>
+    </div>
+    <div class="risks-grid fade-in">
+      <div class="risk-card">
+        <div class="risk-number">01</div>
+        <div class="risk-type">Regulatory Risk</div>
+        <h3>DPDP & GDPR Compliance</h3>
+        <ul>
+          <li>Cannot honour a DPDP erasure request end-to-end — lineage gaps prevent tracing a specific user's data across all systems</li>
+          <li>DPDP penalties reach up to ₹250 crore per breach incident</li>
+          <li>GDPR exposure wherever EU personal data enters our pipelines</li>
+          <li>Consent status disconnected from the data it governs</li>
+        </ul>
+      </div>
+      <div class="risk-card">
+        <div class="risk-number">02</div>
+        <div class="risk-type">Security Risk</div>
+        <h3>Unprotected Data Movement</h3>
+        <ul>
+          <li>Confidential fields cross cloud boundaries without tokenisation — raw values exposed at every handoff</li>
+          <li>Per-cloud key management (AWS KMS, GCP KMS) with no unified revocation capability</li>
+          <li>Atlan lineage graph is an unprotected attack surface — maps sensitive data flows to anyone with catalog access</li>
+          <li>A breach could go undetected for weeks with no cross-cloud observability</li>
+        </ul>
+      </div>
+      <div class="risk-card">
+        <div class="risk-number">03</div>
+        <div class="risk-type">Operational Risk</div>
+        <h3>No Lineage-Aware Operations</h3>
+        <ul>
+          <li>One upstream failure cascades into dozens of alerts — no automated root-cause tracing</li>
+          <li>Metric definitions inconsistent across clouds — alerts fire but nobody trusts them</li>
+          <li>Shadow pipelines outside governance accumulate as compliance liability</li>
+          <li>Manual incident investigation costs multiply with every new pipeline</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div class="section-number">03</div>
+      <div class="section-header-text">
+        <h2>Proposed Architecture</h2>
+        <p>Four concentric rings of control</p>
+      </div>
+    </div>
+    <p class="arch-intro fade-in">The architecture is structured as four rings, each delivering standalone value. Together they form a complete confidential data governance posture — without replacing existing investments.</p>
+
+    <div class="rings-container fade-in">
+      <div class="ring-card" data-ring="1">
+        <div class="ring-label">Ring One</div>
+        <h3>Classification</h3>
+        <div class="ring-divider"></div>
+        <p>Classify at ingestion, automatically. Tags are hereditary via lineage — downstream datasets inherit classification from upstream sources without manual intervention. Three tiers minimum: Internal, Confidential, Restricted. Atlan enforces inheritance across the lineage graph.</p>
+      </div>
+      <div class="ring-card" data-ring="2">
+        <div class="ring-label">Ring Two</div>
+        <h3>Key Management</h3>
+        <div class="ring-divider"></div>
+        <p>Centralised key management via HashiCorp Vault — above and across AWS KMS, GCP Cloud KMS, and Azure Key Vault. Envelope encryption as the standard. Tokenisation for all cross-cloud movement of Confidential and Restricted fields: the token travels, the raw value never does.</p>
+      </div>
+      <div class="ring-card" data-ring="3">
+        <div class="ring-label">Ring Three</div>
+        <h3>Zero-Trust Data Mesh</h3>
+        <div class="ring-divider"></div>
+        <p>Domain ownership of data products. A central policy broker defines rules; domains enforce them. Every cross-cloud pipeline registered with a formal contract in Atlan declaring source, destination, classification, and purpose. No implicit trust between cloud environments.</p>
+      </div>
+      <div class="ring-card" data-ring="4">
+        <div class="ring-label">Ring Four</div>
+        <h3>Atlan as Control Plane</h3>
+        <div class="ring-divider"></div>
+        <p>Elevate Atlan from catalog to policy enforcement point. Access requests evaluated against lineage and classification before approval. Automated compliance checks on every new pipeline registration. Immutable audit trail generated automatically — compliance evidence without manual assembly.</p>
+      </div>
+    </div>
+
+    <div class="atlan-note fade-in">
+      <div class="atlan-icon">A</div>
+      <div>
+        <h4>Leveraging Your Existing Atlan Investment</h4>
+        <p>Atlan is already deployed. This architecture does not replace it — it extends Atlan into a role we are currently not using: policy enforcement, DPDP erasure workflows, automated classification inheritance, and lineage-aware access control. The catalog becomes the control plane.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div class="section-number">04</div>
+      <div class="section-header-text">
+        <h2>Incremental Roadmap</h2>
+        <p>No big-bang migration — each phase funds the next</p>
+      </div>
+    </div>
+    <div class="phases-grid fade-in">
+      <div class="phase-card">
+        <div class="phase-number">Phase One</div>
+        <div class="phase-timeline">Months 1 – 3</div>
+        <h3>Know What You Have</h3>
+        <p class="phase-goal">Audit Atlan lineage coverage. Agree on classification taxonomy. Identify the 20% of datasets representing the highest risk. Deploy HashiCorp Vault.</p>
+        <div class="phase-deliverable">
+          <strong>Deliverable</strong>
+          Risk map of highest-exposure data flows. Classification gaps fully documented.
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-number">Phase Two</div>
+        <div class="phase-timeline">Months 3 – 6</div>
+        <h3>Control What Moves</h3>
+        <p class="phase-goal">Pipeline contracts for all cross-cloud movement. Tokenisation for Confidential fields. DPDP consent attributes added as metadata in Atlan. Key management centralised for new pipelines.</p>
+        <div class="phase-deliverable">
+          <strong>Deliverable</strong>
+          No new unregistered cross-cloud pipelines. Existing ones flagged for remediation.
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-number">Phase Three</div>
+        <div class="phase-timeline">Months 6 – 12</div>
+        <h3>Govern Who Touches It</h3>
+        <p class="phase-goal">Domain ownership model deployed. Atlan elevated to policy enforcement point. Automated classification inheritance via lineage. DPDP erasure workflow built and operational.</p>
+        <div class="phase-deliverable">
+          <strong>Deliverable</strong>
+          All Confidential data access brokered, logged, and auditable end-to-end.
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-number">Phase Four</div>
+        <div class="phase-timeline">Month 12+</div>
+        <h3>Prove It Continuously</h3>
+        <p class="phase-goal">Anomaly detection on cross-cloud access patterns. Automated DPDP compliance reporting. Lineage coverage metrics tracked. Regular red-team exercises targeting the human layer.</p>
+        <div class="phase-deliverable">
+          <strong>Deliverable</strong>
+          Audit evidence generated automatically. Compliance posture self-monitored.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTMENT -->
+<section id="investment">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div class="section-number">05</div>
+      <div class="section-header-text">
+        <h2>Investment & Return</h2>
+        <p>The cost of inaction versus the cost of action</p>
+      </div>
+    </div>
+    <div class="investment-grid fade-in">
+      <div class="invest-panel risk-panel">
+        <h3>Cost of Inaction</h3>
+        <p class="panel-sub">What we continue to carry without this architecture</p>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>₹250 crore</strong> maximum DPDP penalty per breach incident — escalating as enforcement matures</div>
+        </div>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>10–50× multiplier</strong> on breach response costs versus prevention — forensics, notification, remediation</div>
+        </div>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>Engineering hours</strong> lost to manual incident investigation — calculate from your last three major pipeline failures</div>
+        </div>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>Procurement risk</strong> — governed data posture is increasingly a contractual requirement in regulated industries</div>
+        </div>
+      </div>
+      <div class="invest-panel return-panel">
+        <h3>Cost of the Architecture</h3>
+        <p class="panel-sub">What the programme requires</p>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>Phase 1–2:</strong> Primarily engineering time and Vault licensing. Low absolute cost, immediate risk reduction.</div>
+        </div>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>Phase 3–4:</strong> Higher investment, funded by engineering efficiency gains from reduced manual investigation</div>
+        </div>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>Atlan is already licensed</strong> — we are using an existing asset more fully, not purchasing a new platform</div>
+        </div>
+        <div class="invest-item">
+          <div class="invest-bullet"></div>
+          <div class="invest-text"><strong>Faster data product launches</strong> — governance built in reduces security review cycles on every new pipeline</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-line fade-in">
+      <div class="bottom-line-label">Bottom Line</div>
+      <div class="bottom-line-text">The cost of one serious breach — regulatory fine, response costs, and reputational damage — exceeds the total two-year architecture investment by a significant margin. This is risk reduction with a clear and defensible return.</div>
+    </div>
+  </div>
+</section>
+
+<!-- THE ASK -->
+<section id="ask">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div class="section-number">06</div>
+      <div class="section-header-text">
+        <h2>The Ask</h2>
+        <p>What we need to begin</p>
+      </div>
+    </div>
+    <div class="ask-grid fade-in">
+      <div>
+        <p style="font-size:16px; color:var(--text-mid); line-height:1.8; margin-bottom:32px; font-family:'Source Serif 4',serif; font-style:italic;">We are not requesting approval for the full programme today. We are requesting mandate and resource allocation for Phase 1 — a 90-day engagement that delivers standalone value and produces the evidence base for Phases 2 through 4.</p>
+        <div class="ask-items">
+          <div class="ask-item">
+            <div class="ask-icon">1</div>
+            <div class="ask-item-text">
+              <h4>90-Day Phase 1 Mandate</h4>
+              <p>Approve scope, timeline, and engineering resource allocation to begin immediately</p>
+            </div>
+          </div>
+          <div class="ask-item">
+            <div class="ask-icon">2</div>
+            <div class="ask-item-text">
+              <h4>Executive Sponsor Assignment</h4>
+              <p>Cross-functional authority over data engineering and security teams — the single most critical success factor</p>
+            </div>
+          </div>
+          <div class="ask-item">
+            <div class="ask-icon">3</div>
+            <div class="ask-item-text">
+              <h4>Vault Infrastructure Approval</h4>
+              <p>Authorisation to deploy centralised key management (HashiCorp Vault or equivalent)</p>
+            </div>
+          </div>
+          <div class="ask-item">
+            <div class="ask-icon">4</div>
+            <div class="ask-item-text">
+              <h4>30-Day Checkpoint</h4>
+              <p>Schedule a mid-Phase 1 review to assess findings and confirm the Phase 2 case</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="critical-box">
+        <div class="critical-label">Critical Success Factor</div>
+        <p>The architecture is sound. The primary execution risk is organisational: data teams move fast and skip classification; security teams own policy but don't understand pipelines. Executive sponsorship that makes data governance a performance criterion — not a suggestion — is the non-negotiable prerequisite for Phase 3 success.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEXT STEPS -->
+<section id="nextsteps">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div class="section-number">07</div>
+      <div class="section-header-text">
+        <h2>Recommended Next Steps</h2>
+        <p>From approval to first deliverable</p>
+      </div>
+    </div>
+    <div class="steps-list fade-in">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h4>Approve Phase 1 scope, timeline, and resource allocation</h4>
+          <p>Confirm engineering headcount and 90-day commitment to begin the lineage audit and classification taxonomy work</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h4>Assign executive sponsor with cross-functional authority</h4>
+          <p>Identify the leader with most to lose from a DPDP fine or breach — that is your champion and the governance mandate holder</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h4>Commission Phase 1 kick-off: Atlan audit and DPDP simulation</h4>
+          <p>Run a simulated erasure request today. Document the gap. This is your opening evidence slide for every subsequent conversation</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h4>Schedule 30-day review to assess findings and confirm Phase 2 case</h4>
+          <p>Phase 1 findings fund Phase 2 approval — the review is the decision point, not a progress update</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">Confidential Multi-Cloud Data Architecture Proposal</div>
+  <div class="footer-right">CONFIDENTIAL · May 2026 · Prepared for CTO / CIO</div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-ins
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Stagger children of faded containers
+  document.querySelectorAll('.risks-grid, .rings-container, .phases-grid, .steps-list').forEach(container => {
+    container.querySelectorAll(':scope > *').forEach((child, i) => {
+      child.style.transitionDelay = `${i * 0.1}s`;
+    });
+  });
+</script>
+</body>
+</html>

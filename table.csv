@@ -1,0 +1,5 @@
+Variable,Description
+AWS_ACCESS_KEY_ID,AWS Access Key ID
+AWS_SECRET_ACCESS_KEY,AWS Secret Access Key
+EC2_INSTANCE_ID,Target EC2 instance ID
+DEPLOYMENT_SCRIPT,Path to deploy script (default ./deploy.sh)
